@@ -53,12 +53,15 @@ Class MonitorAndMail
     End Sub
 
     Sub watcher_FileCreated(sender As Object, e As FileSystemEventArgs)
-
+        Debug.WriteLine(e.FullPath)
         EmailFile(e.FullPath)
 
     End Sub
 
     Sub EmailFile(strFile As String)
+
+        'sleep for 10 seconds to wait for file to be unlocked. found it unreliable to try to detect if file locked and looping to wait
+        Threading.Thread.Sleep(10000)
 
         'check to see if file exists.  found issue with Chrome saving as PDF where it creates 2 files erroneously 
         If File.Exists(strFile) Then
@@ -85,17 +88,17 @@ Class MonitorAndMail
                 Dim mm As New MailMessage
 
                 'keep looping until file lock is released, until timeout expires
-                Do Until IsFileOpen(strFile) = False Or timeout >= 30
-                    Threading.Thread.Sleep(1000)
-                    timeout += 1
-                Loop
+                'Do Until IsFileOpen(strFile) = False Or timeout >= 30
+                'Threading.Thread.Sleep(1000)
+                'timeout += 1
+                'Loop
 
-                If timeout >= 30 Then
-                    pTray.ShowBalloonTip(5000, "TAN Auto Mailer Error", "Skipping file, locked after 30 sec. timeout: " & strFile, ToolTipIcon.Error)
-                    smtp.Dispose()
-                    mm.Dispose()
-                    Exit Sub
-                End If
+                'If timeout >= 30 Then
+                'pTray.ShowBalloonTip(5000, "TAN Auto Mailer Error", "Skipping file, locked after 30 sec. timeout: " & strFile, ToolTipIcon.Error)
+                'smtp.Dispose()
+                'mm.Dispose()
+                ' Sub
+                'End If
 
                 fAttach = New Attachment(strFile)
 

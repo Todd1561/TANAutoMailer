@@ -26,7 +26,7 @@ Public Class frmProfiles
 
         For Each addr As String In txtToAddrs.Text.Split(";")
             If Not Regex.IsMatch(addr, "^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$") Then
-                err += "From address invalid" & vbCrLf
+                err += "To address invalid" & vbCrLf
                 Exit For
             End If
         Next
