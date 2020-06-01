@@ -159,7 +159,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
     <None Include="Resources\Horizontal.png" />
   </ItemGroup>
   <ItemGroup>

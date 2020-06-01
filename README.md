@@ -1,4 +1,4 @@
-﻿Place the TANAutoMailer.exe file anywhere on your computer.  Create a shortcut to it in the 'Startup' folder so it runs at boot for convenience.
+Place the TANAutoMailer.exe file anywhere on your computer.  Create a shortcut to it in the 'Startup' folder so it runs at boot for convenience.
 
 Upon running, a blue folder icon will appear in your taskbar.  Right-click on it and select 'Manage Profiles'.
 
