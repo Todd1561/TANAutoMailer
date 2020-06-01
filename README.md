@@ -9,5 +9,7 @@ If you supply SMTP credentials they are securely stored in the Windows Credentia
 Enjoy!
 
 Todd Nelson
+
 https://toddnelson.net
+
 todd@toddnelson.net
