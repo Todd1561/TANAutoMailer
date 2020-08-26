@@ -23,28 +23,7 @@ Class MonitorAndMail
             pUseCreds = UseCreds
             pTray = Tray
 
-            'send files already in folder at startup
-            Dim di As New DirectoryInfo(WatchPath)
-
-            For Each f In di.GetFiles("*." & FileType)
-                EmailFile(f.FullName)
-            Next
-
-            'register folder watcher
-            Dim watcher As New FileSystemWatcher(WatchPath, "*." & FileType)
-
-            AddHandler watcher.Created, AddressOf watcher_FileCreated
-
-            watcher.EnableRaisingEvents = True
-
-            'keep checking if this thread is still active and sleep
-            Do While MyThread.ContainsKey(Profile)
-                System.Threading.Thread.Sleep(500) 'System.Threading.Timeout.Infinite
-            Loop
-
-            'thread has been killed, stop watching and end sub
-            RemoveHandler watcher.Created, AddressOf watcher_FileCreated
-            watcher = Nothing
+            CheckForFiles(WatchPath, FileType)
 
         Catch ex As Exception
             pTray.ShowBalloonTip(5000, "TAN Auto Mailer Error", ex.Message, ToolTipIcon.Error)
@@ -52,16 +31,21 @@ Class MonitorAndMail
 
     End Sub
 
-    Sub watcher_FileCreated(sender As Object, e As FileSystemEventArgs)
-        Debug.WriteLine(e.FullPath)
-        EmailFile(e.FullPath)
+    Sub CheckForFiles(WatchPath As String, FileType As String)
+        Dim di As New DirectoryInfo(WatchPath)
+
+        For Each f In di.GetFiles("*." & FileType)
+            EmailFile(f.FullName)
+        Next
+
+        'check directory for files every 5 minutes. using FileSystemWatcher seemed to be unreliable, wouldn't reactivate after sleep
+        Threading.Thread.Sleep(300000)
+
+        CheckForFiles(WatchPath, FileType)
 
     End Sub
 
     Sub EmailFile(strFile As String)
-
-        'sleep for 10 seconds to wait for file to be unlocked. found it unreliable to try to detect if file locked and looping to wait
-        Threading.Thread.Sleep(10000)
 
         'check to see if file exists.  found issue with Chrome saving as PDF where it creates 2 files erroneously 
         If File.Exists(strFile) Then
